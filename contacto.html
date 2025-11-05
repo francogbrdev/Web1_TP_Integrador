@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto</title>
+    <link rel="stylesheet" href="contacto.css">
+    <script src="form.js"></script>
+</head>
+
+<body>
+
+
+<header class="header" >
+     <div class="menu container">
+    <label for="menu">
+    </label>
+    <nav class="navbar">
+   <ul>
+<li> <a href ="index.html" class="btn-2">Inicio</a></li>
+<li> <a href="nike.html"class="btn-2">Nike</a></li>
+<li> <a href="adidas.html"class="btn-2">Adidas </a></li>
+<li> <a href="contacto.html"class="btn-2">Contacto</a></li>
+
+</ul>
+</div>
+</nav>
+<ul>
+
+
+</header>
+
+
+
+    <div class="container">
+
+   
+        <form id="contactForm">
+          <div class="form-group">
+            <h1>Formulario de Contacto</h1>
+          <label for="nombre">Nombre:</label>
+              <input type="text" id="nombre" name="nombre" required>
+     </div>
+     <div class="form-group">
+           <label for="edad">Edad:</label>
+      <input type="number" id="edad" name="edad" required>
+          </div>
+      <div class="form-group">
+          <label for="email">Email:</label>
+                <input type="email" id="email" name="email" required>
+       </div>
+       <div class="form-group">
+      <label for="mensaje">Mensaje:</label>
+        <textarea id="mensaje" name="mensaje" required></textarea>
+      </div>
+      <button type="submit">Enviar</button>
+        </form>
+        <div id="result" class="hidden"></div>
+    </div>
+
+</body>
+</html>
