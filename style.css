@@ -19,6 +19,7 @@ body {
 
 img {
   max-width: 90%;
+  pointer-events: none;
 }
 
 .container {
@@ -225,7 +226,7 @@ td {
 
 .product img {
   width: 250px;
-  height: 370px;
+  max-height: 370px;
   margin-bottom: 20px;
 }
 
@@ -409,6 +410,8 @@ td {
   }
 
   .product img {
+    pointer-events: none;
+    object-fit: contain;
     width: 200px;
     height: 250px;
   }
