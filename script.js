@@ -4,10 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const carousel = {
         contenedor: document.querySelector('.carousel-inner'),
         imagenes: [
-            'img/adidas1.png',
-            'img/adidas2.png',
-            'img/adidas3.png',
-            'img/adidas4.png',
+            'img/adidas.car.jpg',
+            'img/adidas car5.jpg',
+            'img/adidas.carrr2.jpg',
+            'img/adidas.carrr3.jpg',
+            'img/ADIH8606.png',
             'img/adidas5.png',
         ],
         actual: 0,
