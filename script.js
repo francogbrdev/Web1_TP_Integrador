@@ -3,113 +3,170 @@ document.addEventListener('DOMContentLoaded', function() {
     // Configuración del carousel
     const carousel = {
         contenedor: document.querySelector('.carousel-inner'),
-        imagenes: [],
+        imagenes: [
+            'img/adidas1.png',
+            'img/adidas2.png',
+            'img/adidas3.png',
+            'img/adidas4.png',
+            'img/adidas5.png',
+        ],
         actual: 0,
-        intervalo: null
+        intervalo: null,
+        transicionando: false
     };
 
-    // Inicializar carousel solo si estamos en la página que lo contiene
-    if (carousel.contenedor) {
-        // Obtener todas las imágenes y guardarlas en el array
-        carousel.imagenes = Array.from(carousel.contenedor.getElementsByTagName('img'));
+    function inicializarCarousel() {
+        if (!carousel.contenedor) return;
+        //pa cargar las imgs 
+        carousel.imagenes.forEach((src, index) => {
+            const img = document.createElement('img');
+            img.src = src;
+            img.alt = `Slide ${index + 1}`;
+            img.style.opacity = index === 0 ? '1' : '0';
+            carousel.contenedor.appendChild(img);
+        });
+        //botones
+        const antBtn = document.getElementById('antBtn');
+        const sigBtn = document.getElementById('sigBtn');
+
+        if (antBtn) antBtn.addEventListener('click', () => cambiarSlide(-1));
+        if (sigBtn) sigBtn.addEventListener('click', () => cambiarSlide(1));
+
+        iniciarAutoRotacion();
+    }
+
+    function cambiarSlide(direccion) {
+        if (carousel.transicionando) return;
+        carousel.transicionando = true;
+
+        const imagenes = carousel.contenedor.querySelectorAll('img');
+        const nuevaActual = calcularSiguienteSlide(direccion);
+
+        imagenes[carousel.actual].style.opacity = '0';
         
-        if (carousel.imagenes.length > 0) {
-            // Configurar estilos iniciales del contenedor
-            carousel.contenedor.style.position = 'relative';
-            carousel.contenedor.style.overflow = 'hidden';
-            
-            // Ocultar todas las imágenes excepto la primera
-            carousel.imagenes.forEach((img, index) => {
-                img.style.position = 'absolute';
-                img.style.top = '0';
-                img.style.left = '0';
-                img.style.width = '100%';
-                img.style.opacity = index === 0 ? '1' : '0';
-                img.style.transition = 'opacity 0.5s ease-in-out';
-            });
+        imagenes[nuevaActual].style.opacity = '1';
 
-            // Ajustar altura del contenedor según la primera imagen
-            carousel.contenedor.style.height = carousel.imagenes[0].height + 'px';
+        carousel.actual = nuevaActual;
 
-            // Función para mostrar imagen específica
-            function mostrarImagen(index) {
-                // Ocultar imagen actual
-                carousel.imagenes[carousel.actual].style.opacity = '0';
-                // Actualizar índice de manera circular
-                carousel.actual = index;
-                if (carousel.actual >= carousel.imagenes.length) {
-                    carousel.actual = 0;
-                } else if (carousel.actual < 0) {
-                    carousel.actual = carousel.imagenes.length - 1;
-                }
-                // Mostrar nueva imagen
-                carousel.imagenes[carousel.actual].style.opacity = '1';
-            }
+        setTimeout(() => {
+            carousel.transicionando = false;
+        }, 500);
+    }
 
-            // Función para imagen siguiente
-            function siguiente() {
-                mostrarImagen(carousel.actual + 1);
-            }
+    function calcularSiguienteSlide(direccion) {
+        const total = carousel.imagenes.length;
+        let nueva = carousel.actual + direccion;
 
-            // Función para imagen anterior
-            function anterior() {
-                mostrarImagen(carousel.actual - 1);
-            }
+        if (nueva >= total) nueva = 0;
+        if (nueva < 0) nueva = total - 1;
 
-            // Eventos de botones
-            const btnAnterior = document.getElementById('antBtn');
-            const btnSiguiente = document.getElementById('sigBtn');
+        return nueva;
+    }
 
-            if (btnAnterior && btnSiguiente) {
-                btnAnterior.addEventListener('click', function() {
-                    anterior();
-                    reiniciarAutoRotacion();
-                });
-                btnSiguiente.addEventListener('click', function() {
-                    siguiente();
-                    reiniciarAutoRotacion();
-                });
-            }
+    function iniciarAutoRotacion() {
+        if (carousel.intervalo) clearInterval(carousel.intervalo);
+        carousel.intervalo = setInterval(() => cambiarSlide(1), 5000);
+    }
 
-            // Eventos de teclado
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'ArrowLeft') {
-                    anterior();
-                    reiniciarAutoRotacion();
-                } else if (e.key === 'ArrowRight') {
-                    siguiente();
-                    reiniciarAutoRotacion();
-                }
-            });
-
-            // Auto-rotación
-            function iniciarAutoRotacion() {
-                if (carousel.intervalo) {
-                    clearInterval(carousel.intervalo);
-                }
-                carousel.intervalo = setInterval(siguiente, 3000);
-            }
-
-            function reiniciarAutoRotacion() {
-                clearInterval(carousel.intervalo);
-                iniciarAutoRotacion();
-            }
-
-            // Pausar en hover
-            carousel.contenedor.addEventListener('mouseenter', () => {
-                clearInterval(carousel.intervalo);
-            });
-
-            carousel.contenedor.addEventListener('mouseleave', iniciarAutoRotacion);
-
-            // Ajustar altura en cambio de tamaño de ventana
-            window.addEventListener('resize', () => {
-                carousel.contenedor.style.height = carousel.imagenes[carousel.actual].height + 'px';
-            });
-
-            // Iniciar auto-rotación
-            iniciarAutoRotacion();
+    function pausarAutoRotacion() {
+        if (carousel.intervalo) {
+            clearInterval(carousel.intervalo);
+            carousel.intervalo = null;
         }
+    }
+
+    function reanudarAutoRotacion() {
+        iniciarAutoRotacion();
+    }
+
+    inicializarCarousel();
+
+    //------------------------------------- Formulario de contacto -------------------------------------------------------
+
+    const formContacto = document.getElementById('contactForm');
+    if (formContacto) {
+        const campos = {
+            nombre: {
+                regex: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]{2,50}$/,
+                error: 'El nombre debe contener solo letras y espacios (2-50 caracteres)'
+            },
+            telefono: {
+                regex: /^[0-9]{10}$/,
+                error: 'Ingrese un número de teléfono válido (10 dígitos)'
+            },
+            email: {
+                regex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+                error: 'Ingrese un email válido'
+            },
+            mensaje: {
+                regex: /^.{10,500}$/,
+                error: 'El mensaje debe tener entre 10 y 500 caracteres'
+            }
+        };
+
+        function validarCampo(campo, valor) {
+            const config = campos[campo];
+            const errorElement = document.getElementById(`${campo}-error`);
+            
+            if (!config.regex.test(valor)) {
+                errorElement.textContent = config.error;
+                return false;
+            } else {
+                errorElement.textContent = '';
+                return true;
+            }
+        }
+
+        Object.keys(campos).forEach(campo => {
+            const input = document.getElementById(campo);
+            if (input) {
+                input.addEventListener('input', function() {
+                    validarCampo(campo, this.value);
+                });
+            }
+        });
+
+        formContacto.addEventListener('submit', function(e) {
+            e.preventDefault();
+            let isValid = true;
+            
+            Object.keys(campos).forEach(campo => {
+                const input = document.getElementById(campo);
+                if (input) {
+                    if (!validarCampo(campo, input.value)) {
+                        isValid = false;
+                    }
+                }
+            });
+
+            if (isValid) {
+                const datosEnviados = document.getElementById('datos-enviados');
+                datosEnviados.innerHTML = ''; // Esto es para limpar Cami
+                
+                Object.keys(campos).forEach(campo => {
+                    const input = document.getElementById(campo);
+                    if (input) {
+                        const div = document.createElement('div');
+                        div.className = 'campo-enviado';
+                        
+                        const label = document.createElement('span');
+                        label.className = 'campo-label';
+                        label.textContent = input.previousElementSibling.textContent;
+                        
+                        const valor = document.createElement('span');
+                        valor.textContent = input.value;
+                        
+                        div.appendChild(label);
+                        div.appendChild(valor);
+                        datosEnviados.appendChild(div);
+                    }
+                });
+
+                // y aca muestra
+                document.getElementById('result').classList.remove('hidden');
+                formContacto.style.display = 'none';
+            }
+        });
     }
 });
 

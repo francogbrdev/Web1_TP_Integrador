@@ -246,6 +246,8 @@ font-size: 20px;
     object-fit: cover;
     opacity: 0;
     transition: opacity 0.5s ease-in-out;
+    will-change: opacity;
+    pointer-events: none;
 }
 
 #antBtn, #sigBtn {
