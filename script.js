@@ -1,20 +1,33 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Configuración del carousel
-    const carousel = {
-        contenedor: document.querySelector('.carousel-inner'),
-        imagenes: [
-            'img/adidas.car.jpg',
-            'img/adidas car5.jpg',
-            'img/adidas.carrr2.jpg',
-            'img/adidas.carrr3.jpg',
-            'img/ADIH8606.png',
-            'img/adidas5.png',
-        ],
+    // Configuración de los carousels
+    const carousels = [
+        {
+            id: 'main-carousel',
+            contenedor: document.querySelector('#main-carousel .carousel-inner'),
+            imagenes: [
+                'img/fondo5.avif',
+                'img/fondo6.avif',
+                'img/prueba11.jpg'
+            ]
+        },
+        {
+            id: 'products-carousel',
+            contenedor: document.querySelector('#products-carousel .carousel-inner'),
+            imagenes: [
+                'img/vans2.webp',
+                'img/campus1.webp',
+                'img/vans1.webp',
+                'img/adidas444.jpg',
+                'img/adidas5.jpg'
+            ]
+        }
+    ].map(config => ({
+        ...config,
         actual: 0,
         intervalo: null,
         transicionando: false
-    };
+    }));
 
     function inicializarCarousel() {
         if (!carousel.contenedor) return;
