@@ -272,11 +272,11 @@ font-size: 20px;
 }
 
 #antBtn {
-    left: 10px;
+    left: 25px;
 }
 
 #sigBtn {
-    right: 10px;
+    right: 100px;
 }
 
 @media (max-width: 768px) {
