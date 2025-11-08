@@ -15,37 +15,45 @@
         <label for="menu">
             <img src="img/menu.png" class="menu-icono" alt="menu">
         </label>
-    <nav class="navbar">
+        <nav class="navbar">
+            <ul>
+                <li><a href="index.html"> Inicio </a></li>
+                <li><a href="vans.html"> Vans </a></li>
+                <li><a href="adidas.html"> Adidas </a></li>
+                <li><a href="contacto.html"> Contacto  </a></li>
+            </ul>
+        </nav>
         <ul>
-<li><a href="index.html"> Inicio </a></li>
-<li><a href="vans.html"> Vans </a></li>
-<li><a href="adidas.html"> Adidas </a></li>
-<li><a href="contacto.html"> Contacto  </a></li>
-  </ul>
-    </nav>
-<ul>
- <li class="submenu">
-  <img src="img/car.svg" id="img-carrito"alt="carrito">
-            <div id="carrito">
-        <table id="lista-carrito">
-        <thead>
-        <tr>
-            <th>Imagen</th>
-            <th>Nombre</th>
-            <th>Precio</th>
-            <th></th>
-        </tr>
-        
-        </thead>
-        <body></body>
-        </table>
-        <a href="#" id="vaciar-carrito"class="btn-2">Vaciar Carrito</a>
-            </div>
-        
-                </ul>
-            </div>
-            </div>
+            <li class="submenu">
+                <img src="img/car.svg" id="img-carrito" alt="carrito">
+                <div id="carrito">
+                    <table id="lista-carrito">
+                        <thead>
+                            <tr>
+                                <th>Imagen</th>
+                                <th>Nombre</th>
+                                <th>Precio</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <a href="#" id="vaciar-carrito" class="btn-2">Vaciar Carrito</a>
+                </div>
+            </li>
+        </ul>
+    </div>
 
+    <div class="header-content container">
+        <div class="header-img">
+            <img src="img/prueba11.jpg" alt="Banner">
+        </div>
+        <div class="header-txt">
+            <h1>DOMINA EL TERRENO</h1>
+            <p>Tu outfit empieza desde abajo </p>
+            <a href="#" class="btn-1">Ver Mas</a>
+        </div>
+    </div>
 </header>
 
 
@@ -154,22 +162,15 @@
 </main>
 
 
-<div class="carousel-container">
+<div id="main-carousel" class="carousel-container">
     <div class="carousel">
         <div class="carousel-inner">
-            <!-- Las imágenes se cargarán dinámicamente desde JavaScript -->
-        </div>
-        <button id="antBtn">Anterior</button>
-        <button id="sigBtn">Siguiente</button>
-    </div>
-</div>
 
-<div class="header-content container">
-    <div class="header-txt">
-        <h1>DOMINA EL TERRENO</h1>
-        <p>Tu outfit empieza desde abajo </p>
-        <a href="#" class="btn-1">Ver Mas</a>
+        </div>
+        <button class="ant-btn carousel-control">‹</button>
+        <button class="sig-btn carousel-control">›</button>
     </div>
+
 </div>
 
 

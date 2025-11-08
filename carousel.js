@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.inner.appendChild(img);
             });
 
-            // Configurar botones
             const antBtn = this.container.querySelector('.ant-btn');
             const sigBtn = this.container.querySelector('.sig-btn');
 
@@ -41,10 +40,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const slides = this.inner.querySelectorAll('img');
             const newIndex = this.calculateNextSlide(direction);
 
-            // Fade out current
             slides[this.currentIndex].style.opacity = '0';
             
-            // Fade in new
             slides[newIndex].style.opacity = '1';
 
             this.currentIndex = newIndex;
@@ -58,7 +55,6 @@ document.addEventListener('DOMContentLoaded', function() {
             const total = this.images.length;
             let newIndex = this.currentIndex + direction;
 
-            // Manejo circular
             if (newIndex >= total) newIndex = 0;
             if (newIndex < 0) newIndex = total - 1;
 
@@ -82,7 +78,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Crear instancias de carousels
     const productCarousel = new Carousel('products-carousel', [
         'img/vans2.webp',
         'img/campus1.webp',

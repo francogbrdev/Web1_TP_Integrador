@@ -1,99 +1,100 @@
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Configuración de los carousels
-    const carousels = [
-        {
-            id: 'main-carousel',
-            contenedor: document.querySelector('#main-carousel .carousel-inner'),
-            imagenes: [
-                'img/fondo5.avif',
-                'img/fondo6.avif',
-                'img/prueba11.jpg'
-            ]
-        },
-        {
-            id: 'products-carousel',
-            contenedor: document.querySelector('#products-carousel .carousel-inner'),
-            imagenes: [
-                'img/vans2.webp',
-                'img/campus1.webp',
-                'img/vans1.webp',
-                'img/adidas444.jpg',
-                'img/adidas5.jpg'
-            ]
+    function encodePath(path) {
+        return path.replace(/ /g, '%20');
+    }
+
+    function setupCarousel(container, images, prevSelector, nextSelector, intervalMs = 4000) {
+        if (!container) return null;
+        const inner = container.querySelector('.carousel-inner') || container.querySelector('#carousel-inner');
+        if (!inner) return null;
+
+        if (Array.isArray(images) && images.length) {
+            inner.innerHTML = '';
+            images.forEach((src, i) => {
+                const img = document.createElement('img');
+                img.src = encodePath(src);
+                img.alt = `Slide ${i + 1}`;
+                img.style.opacity = i === 0 ? '1' : '0';
+                img.style.position = 'absolute';
+                img.style.top = '0';
+                img.style.left = '0';
+                img.style.width = '100%';
+                img.style.height = '100%';
+                img.style.objectFit = 'cover';
+                inner.appendChild(img);
+            });
         }
-    ].map(config => ({
-        ...config,
-        actual: 0,
-        intervalo: null,
-        transicionando: false
-    }));
 
-    function inicializarCarousel() {
-        if (!carousel.contenedor) return;
-        //pa cargar las imgs 
-        carousel.imagenes.forEach((src, index) => {
-            const img = document.createElement('img');
-            img.src = src;
-            img.alt = `Slide ${index + 1}`;
-            img.style.opacity = index === 0 ? '1' : '0';
-            carousel.contenedor.appendChild(img);
-        });
-        //botones
-        const antBtn = document.getElementById('antBtn');
-        const sigBtn = document.getElementById('sigBtn');
+        const slides = inner.querySelectorAll('img');
+        if (!slides.length) return null;
 
-        if (antBtn) antBtn.addEventListener('click', () => cambiarSlide(-1));
-        if (sigBtn) sigBtn.addEventListener('click', () => cambiarSlide(1));
+        let current = 0;
+        let transitioning = false;
+        let interval = null;
 
-        iniciarAutoRotacion();
-    }
+        let prevBtn = null;
+        let nextBtn = null;
+        if (prevSelector) prevBtn = container.querySelector(prevSelector) || document.querySelector(prevSelector);
+        if (nextSelector) nextBtn = container.querySelector(nextSelector) || document.querySelector(nextSelector);
+        // alternativas comunes
+        if (!prevBtn) prevBtn = container.querySelector('.ant-btn') || document.getElementById('antBtn');
+        if (!nextBtn) nextBtn = container.querySelector('.sig-btn') || document.getElementById('sigBtn');
 
-    function cambiarSlide(direccion) {
-        if (carousel.transicionando) return;
-        carousel.transicionando = true;
-
-        const imagenes = carousel.contenedor.querySelectorAll('img');
-        const nuevaActual = calcularSiguienteSlide(direccion);
-
-        imagenes[carousel.actual].style.opacity = '0';
-        
-        imagenes[nuevaActual].style.opacity = '1';
-
-        carousel.actual = nuevaActual;
-
-        setTimeout(() => {
-            carousel.transicionando = false;
-        }, 500);
-    }
-
-    function calcularSiguienteSlide(direccion) {
-        const total = carousel.imagenes.length;
-        let nueva = carousel.actual + direccion;
-
-        if (nueva >= total) nueva = 0;
-        if (nueva < 0) nueva = total - 1;
-
-        return nueva;
-    }
-
-    function iniciarAutoRotacion() {
-        if (carousel.intervalo) clearInterval(carousel.intervalo);
-        carousel.intervalo = setInterval(() => cambiarSlide(1), 5000);
-    }
-
-    function pausarAutoRotacion() {
-        if (carousel.intervalo) {
-            clearInterval(carousel.intervalo);
-            carousel.intervalo = null;
+        function go(dir) {
+            if (transitioning) return;
+            transitioning = true;
+            const next = (current + dir + slides.length) % slides.length;
+            slides[current].style.opacity = '0';
+            slides[next].style.opacity = '1';
+            current = next;
+            setTimeout(() => (transitioning = false), 500);
         }
+
+        if (prevBtn) prevBtn.addEventListener('click', () => { go(-1); resetAuto(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { go(1); resetAuto(); });
+
+        function startAuto() {
+            stopAuto();
+            interval = setInterval(() => go(1), intervalMs);
+        }
+        function stopAuto() { if (interval) { clearInterval(interval); interval = null; } }
+        function resetAuto() { stopAuto(); startAuto(); }
+
+        // pausa al hover
+        container.addEventListener('mouseenter', stopAuto);
+        container.addEventListener('mouseleave', startAuto);
+
+        startAuto();
+
+        return { go, startAuto, stopAuto };
     }
 
-    function reanudarAutoRotacion() {
-        iniciarAutoRotacion();
+    const mainContainer = document.getElementById('main-carousel');
+    if (mainContainer) {
+        setupCarousel(mainContainer, [
+            'img/adidas.carr2.jpg',
+            'img/ADIH8605-6.jpeg',
+            'img/adidas.air force.jpg',
+            'img/adidas.car.jpg'
+        ], '.ant-btn', '.sig-btn', 4500);
     }
 
-    inicializarCarousel();
+    const productsContainer = document.getElementById('products-carousel');
+    if (productsContainer) {
+        setupCarousel(productsContainer, [
+            'img/vans2.webp',
+            'img/campus1.webp',
+            'img/vans1.webp',
+            'img/adidas444.jpg'
+        ], '.ant-btn', '.sig-btn', 4500);
+    }
+
+    const adidasInner = document.getElementById('carousel-inner');
+    if (adidasInner) {
+        const adidasContainer = adidasInner.closest('.carousel-container') || document.querySelector('.carousel-container');
+        setupCarousel(adidasContainer, null, '#antBtn', '#sigBtn', 5000);
+    }
 
     //------------------------------------- Formulario de contacto -------------------------------------------------------
 
@@ -101,7 +102,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (formContacto) {
         const campos = {
             nombre: {
-                regex: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]{2,50}$/,
+                regex: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\\s]{2,50}$/,
                 error: 'El nombre debe contener solo letras y espacios (2-50 caracteres)'
             },
             telefono: {
@@ -109,7 +110,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 error: 'Ingrese un número de teléfono válido (10 dígitos)'
             },
             email: {
-                regex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+                regex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$/,
                 error: 'Ingrese un email válido'
             },
             mensaje: {
@@ -121,66 +122,52 @@ document.addEventListener('DOMContentLoaded', function() {
         function validarCampo(campo, valor) {
             const config = campos[campo];
             const errorElement = document.getElementById(`${campo}-error`);
-            
             if (!config.regex.test(valor)) {
-                errorElement.textContent = config.error;
+                if (errorElement) errorElement.textContent = config.error;
                 return false;
             } else {
-                errorElement.textContent = '';
+                if (errorElement) errorElement.textContent = '';
                 return true;
             }
         }
 
         Object.keys(campos).forEach(campo => {
             const input = document.getElementById(campo);
-            if (input) {
-                input.addEventListener('input', function() {
-                    validarCampo(campo, this.value);
-                });
-            }
+            if (input) input.addEventListener('input', function() { validarCampo(campo, this.value); });
         });
 
         formContacto.addEventListener('submit', function(e) {
             e.preventDefault();
             let isValid = true;
-            
             Object.keys(campos).forEach(campo => {
                 const input = document.getElementById(campo);
-                if (input) {
-                    if (!validarCampo(campo, input.value)) {
-                        isValid = false;
-                    }
-                }
+                if (input) if (!validarCampo(campo, input.value)) isValid = false;
             });
 
             if (isValid) {
                 const datosEnviados = document.getElementById('datos-enviados');
-                datosEnviados.innerHTML = ''; // Esto es para limpar Cami
-                
+                if (datosEnviados) datosEnviados.innerHTML = '';
                 Object.keys(campos).forEach(campo => {
                     const input = document.getElementById(campo);
-                    if (input) {
+                    if (input && datosEnviados) {
                         const div = document.createElement('div');
                         div.className = 'campo-enviado';
-                        
                         const label = document.createElement('span');
                         label.className = 'campo-label';
-                        label.textContent = input.previousElementSibling.textContent;
-                        
+                        label.textContent = input.previousElementSibling ? input.previousElementSibling.textContent : campo;
                         const valor = document.createElement('span');
                         valor.textContent = input.value;
-                        
                         div.appendChild(label);
                         div.appendChild(valor);
                         datosEnviados.appendChild(div);
                     }
                 });
-
-                // y aca muestra
-                document.getElementById('result').classList.remove('hidden');
+                const result = document.getElementById('result');
+                if (result) result.classList.remove('hidden');
                 formContacto.style.display = 'none';
             }
         });
     }
 });
+
 
