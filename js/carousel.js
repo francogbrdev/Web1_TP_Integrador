@@ -78,11 +78,15 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    const productCarousel = new Carousel('products-carousel', [
+const productsContainer = document.getElementById('products-carousel');
+if (productsContainer){
+    setupCarousel(productsContainer, [
         'img/vans2.webp',
         'img/campus1.webp',
         'img/vans1.webp',
         'img/adidas444.jpg',
         'img/adidas5.jpg'
-    ]);
+    ], '.ant-btn', '.sig-btn', 4500);
+}
+       
 });
