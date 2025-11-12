@@ -90,11 +90,16 @@ document.addEventListener('DOMContentLoaded', function() {
         ], '.ant-btn', '.sig-btn', 4500);
     }
 
-    const adidasInner = document.getElementById('carousel-inner');
-    if (adidasInner) {
-        const adidasContainer = adidasInner.closest('.carousel-container') || document.querySelector('.carousel-container');
-        setupCarousel(adidasContainer, null, '#antBtn', '#sigBtn', 5000);
-    }
+   const adidasInner = document.getElementById('carousel-inner');
+if (adidasInner) {
+    const adidasContainer = adidasInner.closest('.carousel-container') || document.querySelector('.carousel-container');
+    setupCarousel(adidasContainer, [
+        'img/adidas.car.jpg',
+        'img/carr.adidas.jpg',
+        'img/adidas.carr2.jpg',
+        'img/adidas car5.jpg'
+    ], '#antBtn', '#sigBtn', 5000);
+}
 
     //------------------------------------- Formulario de contacto -------------------------------------------------------
 
