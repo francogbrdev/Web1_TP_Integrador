@@ -78,7 +78,7 @@ font-family: 'Oswald', sans-serif;
   right: 20px;
 }
 
-/* Estilos específicos para el carousel principal */
+
 #main-carousel {
   margin-bottom: 40px;
 }
@@ -87,7 +87,7 @@ font-family: 'Oswald', sans-serif;
   aspect-ratio: 21/9;
 }
 
-/* Estilos específicos para el carousel de productos */
+
 #products-carousel {
   margin: 40px auto;
 }
@@ -103,7 +103,7 @@ font-family: 'Oswald', sans-serif;
     font-size: 20px;
   }
 }
-/* font-family: 'Poppins', sans-serif; */
+
 
 
 * {
@@ -314,15 +314,18 @@ td {
 }
 
 .product-content {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  flex-wrap: wrap;
   gap: 50px;
+  justify-content: space-between;
 }
 
 .product {
   text-align: center;
   padding: 30px;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  flex: 0 0 calc((100% - 100px) / 3);
+  box-sizing: border-box;
 }
 
 .product img {
@@ -506,8 +509,13 @@ td {
   }
 
   .product-content {
-    grid-template-columns: repeat(1, fr);
+
+    flex-direction: column;
     gap: 30px;
+  }
+
+  .product {
+    flex: 0 0 100%;
   }
 
   .product img {
