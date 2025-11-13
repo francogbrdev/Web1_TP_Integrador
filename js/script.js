@@ -107,7 +107,7 @@ if (adidasInner) {
     if (formContacto) {
         const campos = {
             nombre: {
-                regex: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\\s]{2,50}$/,
+                regex: /^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]{2,50}$/,
                 error: 'El nombre debe contener solo letras y espacios (2-50 caracteres)'
             },
             telefono: {
@@ -115,7 +115,8 @@ if (adidasInner) {
                 error: 'Ingrese un número de teléfono válido (10 dígitos)'
             },
             email: {
-                regex: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$/,
+                // email regex básica: usuario@dominio.tld (acepta subdominios y TLD de 2+ letras)
+                regex: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                 error: 'Ingrese un email válido'
             },
             mensaje: {
@@ -127,7 +128,8 @@ if (adidasInner) {
         function validarCampo(campo, valor) {
             const config = campos[campo];
             const errorElement = document.getElementById(`${campo}-error`);
-            if (!config.regex.test(valor)) {
+            const v = (typeof valor === 'string') ? valor.trim() : valor;
+            if (!config.regex.test(v)) {
                 if (errorElement) errorElement.textContent = config.error;
                 return false;
             } else {
